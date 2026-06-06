@@ -108,10 +108,24 @@ if pr.get("number"):
     icon = PR_ICONS.get(pr.get("review_state", ""), "")
     segments.append(f"PR#{pr['number']}{icon}")
 
-# --- context ---
+# --- context: absolute tokens first, percentage secondary ---
+# On 1M-context models percentage hides degradation: 9% of 1M is already 90k
+# tokens. Quality drops from ~80-100k tokens regardless of window size
+# (context rot), so thresholds are absolute, not relative.
+CTX_WARN, CTX_BAD = 80_000, 100_000
 ctx = data.get("context_window") or {}
+usage = ctx.get("current_usage") or {}
+ctx_tokens = sum(
+    usage.get(k) or 0
+    for k in ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+)
+if not ctx_tokens:  # before first API response current_usage is null
+    ctx_tokens = int((ctx.get("context_window_size") or 0) * (ctx.get("used_percentage") or 0) / 100)
+ctx_color = RED if ctx_tokens >= CTX_BAD else YLW if ctx_tokens >= CTX_WARN else GRN
+tok_fmt = f"{ctx_tokens / 1e6:.2f}M" if ctx_tokens >= 1_000_000 else f"{ctx_tokens / 1000:.1f}k"
+over_200k = " ⚠" if data.get("exceeds_200k_tokens") else ""
 pct = int(ctx.get("used_percentage") or 0)
-segments.append(f"ctx {pct}%")
+segments.append(f"ctx {ctx_color}{tok_fmt}{RST} {DIM}({pct}%){RST}{over_200k}")
 
 # --- cost · +lines/-lines · duration ---
 cost = data.get("cost") or {}
