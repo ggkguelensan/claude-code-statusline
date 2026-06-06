@@ -5,7 +5,7 @@ A compact, dependency-free status line for [Claude Code](https://code.claude.com
 ![statusline in action](screenshot.png)
 
 ```
-O 4.8 1M ⚡xh | 🌿 main* | PR#12 👀 | ctx 7% | $2.17 · +194/-77 · 1h9m | 1.5h 22% · 2.7d 10%
+O 4.8 1M ⚡xh | 🌿 main* | PR#12 👀 | ctx 92.0k (9%) | $2.17 · +194/-77 · 1h9m | 1.5h 22% · 2.7d 10%
 ```
 
 ## What it shows
@@ -17,7 +17,7 @@ O 4.8 1M ⚡xh | 🌿 main* | PR#12 👀 | ctx 7% | $2.17 · +194/-77 · 1h9m | 
 | Worktree | `🌳 agent-1 ← main` | 🌳 = linked worktree (detected via `git rev-parse --git-dir` vs `--git-common-dir`); `← main` = source branch in `--worktree` sessions |
 | Multi-repo | `🌿 gkmux:main* · 🌳 cmux:agent-1` | one entry per repo when dirs are added via `/add-dir`, deduped by repo root |
 | Open PR | `PR#12 👀` | ✅ approved · ❌ changes requested · 📝 draft · 👀 pending; disappears when the PR merges |
-| Context | `ctx 7%` | context window usage |
+| Context | `ctx 92.0k (9%)` | absolute tokens first — on 1M-context models percentage hides degradation; green <80k, yellow 80–100k, red >100k (context rot starts ~80–100k tokens regardless of window size), ⚠ above 200k |
 | Session | `$2.17 · +194/-77 · 1h9m` | cost, lines added/removed, duration |
 | Rate limits | `1.5h 22% · 2.7d 10%` | time until the 5-hour / 7-day window resets + used %; countdown turns yellow at ≥70% used, red at ≥90% (Pro/Max only) |
 
