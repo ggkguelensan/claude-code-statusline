@@ -2,6 +2,8 @@
 
 A compact, dependency-free status line for [Claude Code](https://code.claude.com) (Python stdlib only — no `jq`, no `node`).
 
+![statusline in action](screenshot.png)
+
 ```
 O 4.8 1M ⚡xh | 🌿 main* | PR#12 👀 | ctx 7% | $2.17 · +194/-77 · 1h9m | 1.5h 22% · 2.7d 10%
 ```
